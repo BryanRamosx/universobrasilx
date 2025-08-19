@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNIVERSO BRASIL - Asteroides e Exoplanetas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #0a0e17;
+            color: #ffffff;
+            line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(25, 45, 85, 0.5) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(25, 45, 85, 0.5) 0%, transparent 20%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Menu Sanduíche */
+        .menu-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            background: rgba(18, 25, 43, 0.8);
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            padding: 8px;
+        }
+        
+        .menu-btn span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: #4a7bed;
+            margin: 3px 0;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+        
+        .menu-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        
+        .menu-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .menu-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+        
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100vh;
+            background: rgba(18, 25, 43, 0.95);
+            z-index: 999;
+            transition: left 0.3s ease;
+            padding: 70px 20px 20px;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
+            overflow-y: auto;
+        }
+        
+        .sidebar.active {
+            left: 0;
+        }
+        
+        .sidebar h3 {
+            color: #4a7bed;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.5rem;
+            border-bottom: 1px solid rgba(74, 123, 237, 0.3);
+            padding-bottom: 10px;
+        }
+        
+        .sidebar ul {
+            list-style: none;
+        }
+        
+        .sidebar ul li {
+            margin-bottom: 15px;
+        }
+        
+        .sidebar ul li a {
+            color: #d1e0ff;
+            text-decoration: none;
+            display: block;
+            padding: 12px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+        
+        .sidebar ul li a:hover {
+            background: rgba(74, 123, 237, 0.2);
+            transform: translateX(5px);
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+            position: relative;
+        }
+        
+        .logo {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #4a7bed;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-shadow: 0 0 15px rgba(74, 123, 237, 0.7);
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .logo::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 10%;
+            width: 80%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #4a7bed, transparent);
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-top: 30px;
+        }
+        
+        .card {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(18, 25, 43, 0.8);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #ff6b6b, #4a7bed, #6bff6b);
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+        }
+        
+        h2 {
+            color: #4a7bed;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h2::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #6bff6b;
+        }
+        
+        p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            color: #d1e0ff;
+        }
+        
+        .divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(74, 123, 237, 0.5), transparent);
+            margin: 30px 0;
+            width: 100%;
+        }
+        
+        .animation-container {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            margin: 30px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            background: rgba(10, 14, 23, 0.7);
+        }
+        
+        .asteroid {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(45deg, #aaa, #777);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        
+        .planet {
+            position: absolute;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(74, 123, 237, 0.7);
+        }
+        
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite alternate;
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0.2; }
+            100% { opacity: 1; }
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+            color: #8aa2d3;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .logo {
+                font-size: 2.5rem;
+            }
+            
+            .sidebar {
+                width: 250px;
+                left: -250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Menu Sanduíche -->
+    <div class="menu-btn">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+    
+    <div class="sidebar">
+        <h3>Universo Brasil</h3>
+        <ul>
+            <li><a href="#">Planetas</a></li>
+            <li><a href="#">História do Universo</a></li>
+            <li><a href="#">Estrelas</a></li>
+            <li><a href="#">Galáxias</a></li>
+            <li><a href="#">Buracos Negros</a></li>
+            <li><a href="#">Sistema Solar</a></li>
+            <li><a href="#">Missões Espaciais</a></li>
+            <li><a href="#">Telescópios</a></li>
+            <li><a href="#">Astronautas</a></li>
+            <li><a href="#">Fenômenos Cósmicos</a></li>
+        </ul>
+    </div>
+    
+    <div class="overlay"></div>
+    
+    <div class="container">
+        <header>
+            <h1 class="logo">Universo Brasil</h1>
+        </header>
+        
+        <div class="content">
+            <div class="card">
+                <h2>O que é um Asteroide?</h2>
+                <p>Um asteroide é um corpo rochoso ou metálico que orbita o Sol geralmente menor do que um planeta mas maior do que um meteoroide.</p>
+                
+                <div class="animation-container" id="asteroid-animation">
+                    <!-- Asteroides com JavaScript -->
+                </div>
+                
+                <p>Os asteroides variam em tamanho desde pequenas pedras até corpos com centenas de quilômetros de diâmetro. A maioria deles está localizada no Cinturão de Asteroides, entre as órbitas de Marte e Júpiter.</p>
+            </div>
+            
+            <div class="card">
+                <h2>Exoplanetas e suas belezas</h2>
+                <p>Exoplanetas, ou planetas extrasolares, são planetas que orbitam estrelas fora do nosso Sistema Solar.</p>
+                
+                <div class="animation-container" id="exoplanet-animation">
+                    <!-- Exoplanetas com  JavaScript -->
+                </div>
+                
+                <p>Desde a descoberta do primeiro exoplaneta em 1992, milhares desses mundos distantes foram identificados, alguns com condições que podem ser potencialmente habitáveis.</p>
+            </div>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <footer>
+            <p>Universo Brasil - Explorando os mistérios do cosmos | 2023</p>
+        </footer>
+    </div>
+
+    <script>
+        // Menu 
+        const menuBtn = document.querySelector('.menu-btn');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.overlay');
+        
+        menuBtn.addEventListener('click', () => {
+            menuBtn.classList.toggle('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+        
+        overlay.addEventListener('click', () => {
+            menuBtn.classList.remove('active');
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+        
+        // adicionando estrelas ao background
+        function createStars() {
+            const body = document.querySelector('body');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                star.style.width = Math.random() * 3 + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 5 + 's';
+                body.appendChild(star);
+            }
+        }
+        
+        // ASTEROIDE
+        function initAsteroidAnimation() {
+            const container = document.getElementById('asteroid-animation');
+            for (let i = 0; i < 15; i++) {
+                const asteroid = document.createElement('div');
+                asteroid.classList.add('asteroid');
+                
+                // tamanho
+                const size = Math.random() * 15 + 5;
+                asteroid.style.width = size + 'px';
+                asteroid.style.height = size + 'px';
+                
+                // definindo posição
+                const startY = Math.random() * 180;
+                asteroid.style.left = '-30px';
+                asteroid.style.top = startY + 'px';
+                
+                // definindo a velocidade
+                const duration = Math.random() * 10 + 5;
+                
+                // Animação!
+                asteroid.style.animation = `moveAsteroid ${duration}s linear infinite`;
+                
+                // Keyframes
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes moveAsteroid {
+                        0% { transform: translateX(0) translateY(0); }
+                        100% { transform: translateX(${container.offsetWidth + 50}px) translateY(${Math.random() * 40 - 20}px); }
+                    }
+                `;
+                document.head.appendChild(style);
+                
+                container.appendChild(asteroid);
+            }
+        }
+        
+        // teste de animação dos explnaets 
+        function initExoplanetAnimation() {
+            const container = document.getElementById('exoplanet-animation');
+            
+            // teste da estrela1
+            const star = document.createElement('div');
+            star.style.width = '40px';
+            star.style.height = '40px';
+            star.style.backgroundColor = '#ffcc00';
+            star.style.borderRadius = '50%';
+            star.style.boxShadow = '0 0 30px #ffcc00';
+            star.style.position = 'absolute';
+            star.style.left = 'calc(50% - 20px)';
+            star.style.top = 'calc(50% - 20px)';
+            container.appendChild(star);
+            
+            // Criando exoplanetas
+            for (let i = 0; i < 4; i++) {
+                const planet = document.createElement('div');
+                planet.classList.add('planet');
+                
+                // tamanhos e cores randomicas
+                const size = Math.random() * 20 + 10;
+                const colors = ['#4a7bed', '#ff6b6b', '#6bff6b', '#ffcc00'];
+                const color = colors[i % colors.length];
+                
+                planet.style.width = size + 'px';
+                planet.style.height = size + 'px';
+                planet.style.backgroundColor = color;
+                
+                // animação de órbita
+                const orbitRadius = 40 + i * 25;
+                const duration = 10 + i * 5;
+                
+                planet.style.animation = `orbit ${duration}s linear infinite`;
+                
+                // Keyframes
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes orbit {
+                        0% { 
+                            transform: rotate(0deg) translateX(${orbitRadius}px) rotate(0deg); 
+                        }
+                        100% { 
+                            transform: rotate(360deg) translateX(${orbitRadius}px) rotate(-360deg); 
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+                
+                container.appendChild(planet);
+            }
+        }
+        
+        // Iniciarn tudo quando abrir a página
+        window.onload = function() {
+            createStars();
+            initAsteroidAnimation();
+            initExoplanetAnimation();
+        };
+    </script>
+</body>
+</html>
