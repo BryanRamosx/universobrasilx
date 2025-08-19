@@ -3,6 +3,14 @@
 AUTOR: Bryan Ramos
 E-mail: bryan_rj@live.com
 
+CAPTURAS DE TELAS: 
+
+<img width="1916" height="1023" alt="2025-08-19_13-04-47" src="https://github.com/user-attachments/assets/9badaa22-d43e-4f21-9ea2-54495488b2b0" />
+
+MENU SANDUÍCHE FUNCIONAL: 
+
+<img width="1916" height="1023" alt="2025-08-19_13-05-17" src="https://github.com/user-attachments/assets/6ff4c404-dc3d-40c2-b02a-7f471a924b7a" />
+
 
 
 📋 Descrição
